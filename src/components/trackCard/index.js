@@ -56,10 +56,10 @@ class TrackCard extends Component {
                                 Album: {this.props.album}
                             </Typography>
                             <Typography variant="subtitle2">
-                                Artista: {this.props.artist}
+                                Artista: {this.props.artist.map((artist) => artist.name).toString()}
                             </Typography>
                             <Typography variant="subtitle2">
-                                Duração: {this.props.duration}
+                                Duração: {(this.props.duration/60000).toFixed(1)}
                             </Typography>
                             </CardContent>
                         </div>

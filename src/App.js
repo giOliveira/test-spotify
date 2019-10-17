@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import { Route, Switch } from 'react-router-dom';
-import './App.css';
+import {Route, Switch } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import SearchBar from './components/searchBar'
@@ -26,9 +25,9 @@ class App extends Component {
         <SearchBar/>
           <Switch>
               <Route exact path='/' component={Main}/>
-              <Route path='/artista' component={Artist}/>
-              <Route path='/album' component={Album}/>
-              <Route path='/musica' component={Track}/>
+              <Route path='/artista/:name' component={Artist}/>
+              <Route path='/album/:name' component={Album}/>
+              <Route path='/musica/:name' component={Track}/>
           </Switch>
       </div> 
     );

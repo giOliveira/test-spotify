@@ -2,7 +2,7 @@ import React, {Component, Fragment} from 'react';
 import {withRouter} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { Select, Input, Grid, Button } from '@material-ui/core';
+import {Grid, Button } from '@material-ui/core';
 
 const styles = () => ({
     root: {
@@ -71,7 +71,6 @@ class SearchBar extends Component {
             .push(`/${this.state.select}/${this.state.input}`);
     }
 
-
     render() {
 
         const {classes} = this.props;
@@ -86,7 +85,7 @@ class SearchBar extends Component {
                             className={classes.select}
                             onChange={(event) => this.optionHandler(event)}
                             >
-                                <option value="" disabled selected>Selecione</option>
+                                <option value="" disabled>Selecione</option>
                                 <option value="artista">Artista</option>
                                 <option value="album">Álbum</option>
                                 <option value="musica">Música</option>

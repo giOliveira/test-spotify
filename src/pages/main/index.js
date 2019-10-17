@@ -2,8 +2,7 @@ import React, {Component, Fragment} from 'react';
 import {withRouter} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import ArtistCard from '../../components/artistCard';
-import { flexbox } from '@material-ui/system';
+import {authenticate, redirect} from '../../functions';
 
 const styles = () => ({
     root: {
@@ -19,6 +18,16 @@ class Main extends Component {
     handleExpandClick = () => {
         this.setState(state => ({ expanded: !state.expanded }));
     };
+
+    componentDidMount() {
+
+        const { location } = this.props;
+        const token = localStorage.getItem('secure_token');
+        if(!token){
+            authenticate(location);
+        }
+        redirect();
+    }
 
     render() {
 

@@ -11,6 +11,7 @@ const styles = () => ({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
+        marginBottom: 15,
       },
       card: {
         width: '90%',
@@ -59,7 +60,7 @@ class AlbumCard extends Component {
                         />
                         <CardContent>
                             <Typography variant="body2" component="p">
-                                {this.props.artist}
+                            {this.props.artist.map((artist) => artist.name).toString()}
                             </Typography>
                         </CardContent>
                         <CardActions disableSpacing>

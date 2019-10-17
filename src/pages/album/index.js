@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { Grid } from '@material-ui/core/';
 import AlbumCard from '../../components/albumCard';
+import {isAthenticate} from '../../functions';
 
 const styles = () => ({
     root: {
@@ -14,7 +15,29 @@ const styles = () => ({
 
 class Artist extends Component {
     
-    state = { expanded: false };
+    state = { expanded: false, albums: [] };
+    
+
+    componentWillMount(){
+        isAthenticate(this.props);
+    }
+
+    componentDidMount() {
+
+        fetch(`https://api.spotify.com/v1/search?q=${this.props.match.params.name}&type=album`, { 
+            method: 'get', 
+            headers: new Headers({
+              'Authorization': 'Bearer '+localStorage.getItem('access_token')
+            })
+          })
+        .then(res => res.json())
+        .then((data) => {
+          this.setState({ albums: data.albums.items })
+          console.log(data)
+        })
+        .catch(console.log)
+       
+    }
 
     handleExpandClick = () => {
         this.setState(state => ({ expanded: !state.expanded }));
@@ -29,11 +52,13 @@ class Artist extends Component {
             <Fragment>
                 <div className={classes.root}>
                     <Grid container>
-                        <AlbumCard 
-                            name="teste"
-                            img="https://files.directtalk.com.br/1.0/api/file/public/01bab00a-7a1e-4737-868e-7bf04d605856/content-inline"
-                            artist="teste"
-                            tracks="teste" />
+                        {this.state.albums.map((album) => (
+                            <AlbumCard 
+                                name={album.name}
+                                img={album.images[0].url}
+                                artist={album.artists}
+                                tracks="teste" />
+                        ))}
                     </Grid>
                 </div>
             </Fragment>

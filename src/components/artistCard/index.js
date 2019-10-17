@@ -54,12 +54,12 @@ class ArtistCard extends Component {
                     />
                     <CardMedia
                         className={classes.media}
-                        image={this.props.img}
+                        image={this.props.img ? this.props.img.url : 'https://picsum.photos/200/300/?random'}
                         title={this.props.name}
                     />
                     <CardContent>
                         <Typography variant="body2" component="p">
-                            {this.props.desc}
+                            {this.props.desc.map((genre) => genre).toString()}
                         </Typography>
                     </CardContent>
                     <CardActions disableSpacing>
