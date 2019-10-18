@@ -34,7 +34,7 @@ const styles = () => ({
     playIcon: {
       height: 38,
       width: 38,
-    },
+    }
   })
 
 class TrackCard extends Component {
@@ -65,7 +65,7 @@ class TrackCard extends Component {
                         </div>
                         <CardMedia
                             className={classes.cover}
-                            image={this.props.img}
+                            image={this.props.img ? this.props.img : 'https://picsum.photos/id/904/200/300?grayscale'}
                             title={this.props.name}
                         />
                     </Card>

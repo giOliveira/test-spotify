@@ -16,7 +16,7 @@ const styles = () => ({
 
 class Artist extends Component {
     
-    state = { expanded: false, artists: [] };
+    state = { expanded: false, artists: [], albuns: [] };
     
 
     componentWillMount(){
@@ -34,10 +34,10 @@ class Artist extends Component {
         .then(res => res.json())
         .then((data) => {
           this.setState({ artists: data.artists.items })
-          console.log(data.artists.items[0].images[0].url)
+          
         })
         .catch(console.log)
-       
+
     }
 
     handleExpandClick = () => {
@@ -57,7 +57,7 @@ class Artist extends Component {
                                 name={artist.name}
                                 img={artist.images[0]}
                                 desc={artist.genres}
-                                list="teste" />
+                                id={artist.id} />
                         ))}
                     </Grid>
                 </div>

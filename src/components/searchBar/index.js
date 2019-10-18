@@ -85,7 +85,7 @@ class SearchBar extends Component {
                             className={classes.select}
                             onChange={(event) => this.optionHandler(event)}
                             >
-                                <option value="" disabled>Selecione</option>
+                                <option value="">Selecione</option>
                                 <option value="artista">Artista</option>
                                 <option value="album">Álbum</option>
                                 <option value="musica">Música</option>

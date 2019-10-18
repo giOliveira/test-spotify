@@ -12,6 +12,7 @@ const styles = () => ({
         alignItems: 'center',
         justifyContent: 'center',
         marginBottom: 15,
+        marginTop: 15
       },
       card: {
         width: '90%',
@@ -31,16 +32,33 @@ const styles = () => ({
       },
       icon: {
           color: '#fff',
+      },
+      desc: {
+          fontSize: 12
       }
 });
 
 class AlbumCard extends Component {
     
-    state = { expanded: false };
+    state = { expanded: false, tracks: [] };
 
     handleExpandClick = () => {
         this.setState(state => ({ expanded: !state.expanded }));
     };
+
+    componentDidMount(){
+        fetch(`https://api.spotify.com/v1/albums/${this.props.id}/tracks`, { 
+            method: 'get', 
+            headers: new Headers({
+            'Authorization': 'Bearer '+localStorage.getItem('access_token')
+            })
+        })
+        .then(res => res.json())
+        .then((data) => {
+            this.setState({ tracks: data.items })
+        })
+        .catch(console.log)
+    }
 
     render() {
 
@@ -55,18 +73,18 @@ class AlbumCard extends Component {
                         />
                         <CardMedia
                             className={classes.media}
-                            image={this.props.img}
+                            image={this.props.img ? this.props.img : 'https://picsum.photos/id/904/200/300?grayscale'}
                             title={this.props.name}
                         />
                         <CardContent>
-                            <Typography variant="body2" component="p">
+                            <Typography variant="body2" component="p" className={classes.desc}>
                             {this.props.artist.map((artist) => artist.name).toString()}
                             </Typography>
                         </CardContent>
                         <CardActions disableSpacing>
-                        <IconButton aria-label="add to favorites">
+                        {/* <IconButton aria-label="add to favorites">
                             <FavoriteIcon className={classes.icon}/>
-                        </IconButton>
+                        </IconButton> */}
                         <IconButton
                             className={classes.expand, {
                                 [classes.expandOpen]: this.state.expanded
@@ -81,7 +99,9 @@ class AlbumCard extends Component {
                         <Collapse in={this.state.expanded} timeout="auto" unmountOnExit>
                             <CardContent>
                             <Typography paragraph>
-                                {this.props.tracks}
+                            {this.state.tracks.map((track) => (
+                                <p>{track.name}</p>
+                            ))}
                             </Typography>
                             </CardContent>
                         </Collapse>

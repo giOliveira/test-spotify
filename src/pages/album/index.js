@@ -33,7 +33,6 @@ class Artist extends Component {
         .then(res => res.json())
         .then((data) => {
           this.setState({ albums: data.albums.items })
-          console.log(data)
         })
         .catch(console.log)
        
@@ -57,7 +56,7 @@ class Artist extends Component {
                                 name={album.name}
                                 img={album.images[0].url}
                                 artist={album.artists}
-                                tracks="teste" />
+                                id={album.id} />
                         ))}
                     </Grid>
                 </div>
