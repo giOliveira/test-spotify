@@ -15,4 +15,20 @@ export const isAthenticate = (props) => {
     if (!localStorage.getItem('access_token')) {
       props.history.push("/");
     }
-  }
+}
+
+export const newAuth = () => {
+    localStorage.removeItem('access_token');
+}
+
+export const favoriteItem = (id) => {
+    if(localStorage.getItem('favorites')){
+        if(localStorage.getItem('favorites').indexOf(id) === -1){
+            const favs = localStorage.getItem('favorites') + ',' + id;
+            localStorage.setItem('favorites', favs)
+        }
+    }else{
+        localStorage.setItem('favorites', id)
+    }
+    
+}

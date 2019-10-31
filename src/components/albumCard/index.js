@@ -5,6 +5,7 @@ import { withStyles } from '@material-ui/core/styles';
 import {Card, CardHeader, CardMedia, CardContent, CardActions, Collapse, IconButton, Typography, Grid} from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import FavoriteIcon from '@material-ui/icons/Favorite';
+import {favoriteItem} from '../../functions'
 
 const styles = () => ({
       container: {
@@ -33,6 +34,9 @@ const styles = () => ({
       icon: {
           color: '#fff',
       },
+      favorite: {
+          color: 'red'
+      },
       desc: {
           fontSize: 12
       }
@@ -40,7 +44,7 @@ const styles = () => ({
 
 class AlbumCard extends Component {
     
-    state = { expanded: false, tracks: [] };
+    state = { expanded: false, tracks: [], favorite: this.props.favorite };
 
     handleExpandClick = () => {
         this.setState(state => ({ expanded: !state.expanded }));
@@ -58,6 +62,11 @@ class AlbumCard extends Component {
             this.setState({ tracks: data.items })
         })
         .catch(console.log)
+    }
+
+    favorite = (id) => {
+        this.setState(state => ({ expanded: !state.favorite }));
+        favoriteItem(id)
     }
 
     render() {
@@ -82,9 +91,15 @@ class AlbumCard extends Component {
                             </Typography>
                         </CardContent>
                         <CardActions disableSpacing>
-                        {/* <IconButton aria-label="add to favorites">
-                            <FavoriteIcon className={classes.icon}/>
-                        </IconButton> */}
+                        <IconButton 
+                            className={this.props.favorite}
+                            aria-label="add to favorites" 
+                            onClick={(event) => this.favorite(this.props.id)}
+                        >
+                            <FavoriteIcon className={classes.icon, {
+                                [classes.favorite]: this.state.favorite
+                            }}/>
+                        </IconButton>
                         <IconButton
                             className={classes.expand, {
                                 [classes.expandOpen]: this.state.expanded

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { Grid } from '@material-ui/core/';
 import AlbumCard from '../../components/albumCard';
-import {isAthenticate} from '../../functions';
+import {isAthenticate, newAuth} from '../../functions';
 
 const styles = () => ({
     root: {
@@ -32,14 +32,24 @@ class Artist extends Component {
           })
         .then(res => res.json())
         .then((data) => {
-          this.setState({ albums: data.albums.items })
+            if(data.error){
+                newAuth()
+                isAthenticate(this.props);
+            }else{
+                this.setState({ albums: data.albums.items })
+            }
         })
         .catch(console.log)
        
     }
 
-    handleExpandClick = () => {
-        this.setState(state => ({ expanded: !state.expanded }));
+    isFavorite = (id) => {
+        const items = localStorage.getItem('favorites');
+        if(items && items.indexOf(id) >= 0){
+            return true
+        }else{
+            return false
+        }
     };
 
     render() {
@@ -56,7 +66,8 @@ class Artist extends Component {
                                 name={album.name}
                                 img={album.images[0].url}
                                 artist={album.artists}
-                                id={album.id} />
+                                id={album.id} 
+                                favorite={this.isFavorite(album.id)}/>
                         ))}
                     </Grid>
                 </div>

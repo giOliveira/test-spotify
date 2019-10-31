@@ -3,6 +3,8 @@ import {withRouter} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import {Card, CardContent, CardMedia, IconButton, Typography, Grid} from '@material-ui/core/';
+import FavoriteIcon from '@material-ui/icons/Favorite';
+import {favoriteItem} from '../../functions'
 
 const styles = () => ({
     container: {
@@ -34,10 +36,21 @@ const styles = () => ({
     playIcon: {
       height: 38,
       width: 38,
+    },
+    favorite: {
+        color: 'red'
     }
   })
 
 class TrackCard extends Component {
+
+    state = {favorite: this.props.favorite };
+
+    favorite = (id) => {
+        console.log(this.props.id)
+        this.setState(state => ({ expanded: !state.favorite }));
+        favoriteItem(id)
+    }
 
     render() {
 
@@ -61,6 +74,15 @@ class TrackCard extends Component {
                             <Typography variant="subtitle2">
                                 Duração: {(this.props.duration/60000).toFixed(1)}
                             </Typography>
+                            <IconButton 
+                                className={this.props.favorite}
+                                aria-label="add to favorites" 
+                                onClick={(event) => this.favorite(this.props.id)}
+                            >
+                                <FavoriteIcon className={classes.icon, {
+                                    [classes.favorite]: this.state.favorite
+                                }}/>
+                            </IconButton>
                             </CardContent>
                         </div>
                         <CardMedia
