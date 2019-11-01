@@ -48,7 +48,7 @@ class TrackCard extends Component {
 
     favorite = (id) => {
         console.log(this.props.id)
-        this.setState(state => ({ expanded: !state.favorite }));
+        this.setState(state => ({ favorite: !state.favorite }));
         favoriteItem(id)
     }
 

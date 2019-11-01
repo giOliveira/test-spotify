@@ -24,11 +24,15 @@ export const newAuth = () => {
 export const favoriteItem = (id) => {
     if(localStorage.getItem('favorites')){
         if(localStorage.getItem('favorites').indexOf(id) === -1){
-            const favs = localStorage.getItem('favorites') + ',' + id;
+            const favs = localStorage.getItem('favorites') + id + ',';
+            localStorage.setItem('favorites', favs)
+        }else{
+            var favs = localStorage.getItem('favorites');
+            favs = favs.substring(0, favs.indexOf(id)) + favs.substring(favs.indexOf(',',favs.indexOf(id)) +1, favs.length);
             localStorage.setItem('favorites', favs)
         }
     }else{
-        localStorage.setItem('favorites', id)
+        localStorage.setItem('favorites', id+',')
     }
     
 }

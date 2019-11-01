@@ -65,7 +65,7 @@ class ArtistCard extends Component {
     }
 
     favorite = (id) => {
-        this.setState(state => ({ expanded: !state.favorite }));
+        this.setState(state => ({ favorite: !state.favorite }));
         favoriteItem(id)
     }
 
