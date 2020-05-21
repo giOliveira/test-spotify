@@ -13,7 +13,7 @@ const styles = () => ({
       },
 });
 
-class Artist extends Component {
+class Album extends Component {
     
     state = { expanded: false, albums: [] };
     
@@ -76,8 +76,8 @@ class Artist extends Component {
     }
 }
 
-Artist.propTypes = {
+Album.propTypes = {
     classes: PropTypes.object.isRequired
 };
 
-export default (withStyles(styles)(withRouter(Artist)));
+export default (withStyles(styles)(withRouter(Album)));
