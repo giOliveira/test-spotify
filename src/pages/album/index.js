@@ -1,10 +1,16 @@
 import React, {Component, Fragment} from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import {withRouter} from 'react-router-dom';
 import PropTypes from 'prop-types';
+
 import { withStyles } from '@material-ui/core/styles';
 import { Grid } from '@material-ui/core/';
+
 import AlbumCard from '../../components/albumCard';
 import {isAthenticate, newAuth} from '../../functions';
+import {fetchAlbumsAction} from '../../api';
+import {getAlbums, getAlbumsPending, getAlbumsError} from '../../reducers/albums';
 
 const styles = () => ({
     root: {
@@ -14,33 +20,26 @@ const styles = () => ({
 });
 
 class Album extends Component {
-    
-    state = { expanded: false, albums: [] };
-    
+
+    constructor(props) {
+        super(props);
+
+        this.shouldComponentRender = this.shouldComponentRender.bind(this);
+    }
 
     componentWillMount(){
         isAthenticate(this.props);
     }
 
-    componentDidMount() {
+    componentDidMount(){
+        const {fetchAlbums} = this.props;
+        fetchAlbums(this.props.match.params.name);
+    }
 
-        fetch(`https://api.spotify.com/v1/search?q=${this.props.match.params.name}&type=album`, { 
-            method: 'get', 
-            headers: new Headers({
-              'Authorization': 'Bearer '+localStorage.getItem('access_token')
-            })
-          })
-        .then(res => res.json())
-        .then((data) => {
-            if(data.error){
-                newAuth()
-                isAthenticate(this.props);
-            }else{
-                this.setState({ albums: data.albums.items })
-            }
-        })
-        .catch(console.log)
-       
+    shouldComponentRender() {
+        const {pending} = this.props;
+        if(this.pending === false) return false;
+        return true;
     }
 
     isFavorite = (id) => {
@@ -54,14 +53,17 @@ class Album extends Component {
 
     render() {
 
-        const {classes} = this.props;
+        const {albums, error, pending, classes} = this.props;
         
 
         return (
             <Fragment>
                 <div className={classes.root}>
+
+                {error && <span>{error}</span>}
+
                     <Grid container>
-                        {this.state.albums.map((album) => (
+                        {albums.map((album) => (
                             <AlbumCard 
                                 name={album.name}
                                 img={album.images[0].url}
@@ -76,8 +78,18 @@ class Album extends Component {
     }
 }
 
-Album.propTypes = {
-    classes: PropTypes.object.isRequired
-};
 
-export default (withStyles(styles)(withRouter(Album)));
+const mapStateToProps = state => ({
+    error: getAlbumsError(state),
+    albums: getAlbums(state),
+    pending: getAlbumsPending(state)
+})
+
+const mapDispatchToProps = dispatch => bindActionCreators({
+    fetchAlbums: value => fetchAlbumsAction(value)
+}, dispatch)
+
+export default connect(
+        mapStateToProps,
+        mapDispatchToProps
+    )((withStyles(styles)(withRouter(Album))));

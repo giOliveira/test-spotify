@@ -1,7 +1,10 @@
-import { applyMiddleware, createStore } from 'redux';
+import { applyMiddleware, createStore, combineReducers } from 'redux';
 import thunk from 'redux-thunk';
 
-import rootReducer from '../reducers/tracks';
+import trackReducer from '../reducers/tracks';
+import albumReducer from '../reducers/albums';
+
+const rootReducer = combineReducers({trackReducer, albumReducer})
 
 const middlewares = [thunk];
 
