@@ -1,10 +1,16 @@
 import React, {Component, Fragment} from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import {withRouter} from 'react-router-dom';
 import PropTypes from 'prop-types';
+
 import { withStyles } from '@material-ui/core/styles';
 import { Grid } from '@material-ui/core/';
+
 import ArtistCard from '../../components/artistCard';
 import {isAthenticate, newAuth} from '../../functions';
+import {fetchArtistsAction} from '../../api';
+import {getArtists, getArtistsPending, getArtistsError} from '../../reducers/artists';
 
 const styles = () => ({
     root: {
@@ -15,34 +21,29 @@ const styles = () => ({
 });
 
 class Artist extends Component {
-    
-    state = { expanded: false, artists: [], albuns: [] };
-    
+
+    constructor(props) {
+        super(props);
+
+        this.shouldComponentRender = this.shouldComponentRender.bind(this);
+    }
 
     componentWillMount(){
         isAthenticate(this.props);
     }
 
-    componentDidMount() {
-
-        fetch(`https://api.spotify.com/v1/search?q=${this.props.match.params.name}&type=artist`, { 
-            method: 'get', 
-            headers: new Headers({
-              'Authorization': 'Bearer '+localStorage.getItem('access_token')
-            })
-          })
-        .then(res => res.json())
-        .then((data) => {
-            if(data.error){
-                newAuth()
-                isAthenticate(this.props);
-            }else{
-                this.setState({ artists: data.artists.items })
-            }
-        })
-        .catch(console.log)
-
+    componentDidMount(){
+        const {fetchArtists} = this.props;
+        fetchArtists(this.props.match.params.name);
     }
+
+    shouldComponentRender() {
+        const {pending} = this.props;
+        if(this.pending === false) return false;
+        return true;
+    }
+    
+    state = { expanded: false};
 
     handleExpandClick = () => {
         this.setState(state => ({ expanded: !state.expanded }));
@@ -59,13 +60,16 @@ class Artist extends Component {
 
     render() {
 
-        const {classes} = this.props;
+        const {artists, error, pending, classes} = this.props;
 
         return (
             <Fragment>
                 <div className={classes.root}>
+
+                {error && <span>{error}</span>}
+
                     <Grid container>
-                    {this.state.artists.map((artist) => (
+                    {artists.map((artist) => (
                             <ArtistCard 
                                 name={artist.name}
                                 img={artist.images[0]}
@@ -80,8 +84,17 @@ class Artist extends Component {
     }
 }
 
-Artist.propTypes = {
-    classes: PropTypes.object.isRequired
-};
+const mapStateToProps = state => ({
+    error: getArtistsError(state),
+    artists: getArtists(state),
+    pending: getArtistsPending(state)
+})
 
-export default (withStyles(styles)(withRouter(Artist)));
+const mapDispatchToProps = dispatch => bindActionCreators({
+    fetchArtists: value => fetchArtistsAction(value)
+}, dispatch)
+
+export default connect(
+        mapStateToProps,
+        mapDispatchToProps
+    )((withStyles(styles)(withRouter(Artist))));

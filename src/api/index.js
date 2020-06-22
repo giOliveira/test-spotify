@@ -1,5 +1,6 @@
 import {fetchTracksPending, fetchTracksSuccess, fetchTracksError} from  '../actions/tracks'
 import {fetchAlbumsPending, fetchAlbumsSuccess, fetchAlbumsError} from  '../actions/albums'
+import {fetchArtistsPending, fetchArtistsSuccess, fetchArtistsError} from  '../actions/artists'
 import {newAuth} from '../functions'
 
 const ENDPOINT = 'https://api.spotify.com/v1/';
@@ -50,6 +51,31 @@ export function fetchAlbumsAction(album) {
         })
         .catch(error => {
             dispatch(fetchAlbumsError(error));
+        })
+    }
+}
+
+export function fetchArtistsAction(artist) {
+    return dispatch => {
+        dispatch(fetchArtistsPending());
+        console.log(artist)
+        fetch(`${ENDPOINT}search?q=${artist}&type=artist`, {
+            method: 'get',
+            headers: new Headers({
+                'Authorization': 'Bearer ' + localStorage.getItem('access_token')
+            })
+        })
+            .then(res => res.json())
+            .then((res) => {
+            if(res.error) {
+                newAuth();
+                throw(res.error);
+            }
+            dispatch(fetchArtistsSuccess(res.artists.items));
+            return res.artists.items;
+        })
+        .catch(error => {
+            dispatch(fetchArtistsError(error));
         })
     }
 }
